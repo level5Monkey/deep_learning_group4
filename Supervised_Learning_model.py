@@ -72,11 +72,11 @@ x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.2, rando
 x_val, x_test, y_val, y_test = train_test_split(x_test, y_test, test_size = 0.5, random_state = 42)
 
 model = keras.models.Sequential([
+    keras.layers.Conv2D(16, kernel_size=(5, 5), padding="same", strides=1, activation = 'relu', input_shape=(width, height, 3)),
+    keras.layers.MaxPooling2D(pool_size=(2, 2), strides=(1, 1)),
     keras.layers.Conv2D(32, kernel_size=(5, 5), padding="same", strides=1, activation = 'relu', input_shape=(width, height, 3)),
     keras.layers.MaxPooling2D(pool_size=(2, 2), strides=(1, 1)),
     keras.layers.Conv2D(64, kernel_size=(5, 5), padding="same", strides=1, activation = 'relu', input_shape=(width, height, 3)),
-    keras.layers.MaxPooling2D(pool_size=(2, 2), strides=(1, 1)),
-    keras.layers.Conv2D(128, kernel_size=(5, 5), padding="same", strides=1, activation = 'relu', input_shape=(width, height, 3)),
     keras.layers.MaxPooling2D(pool_size=(2, 2), strides=(1, 1)),
     keras.layers.Flatten(),
     keras.layers.Dense(256, activation="relu"),
@@ -109,6 +109,9 @@ history = model.fit(datagen.flow(x_train, y_train, batch_size = b_size),
                     verbose=1, callbacks=[earlystopping])
 
 model.evaluate(x_test, y_test)
+model.save('model_classification.h5')
+model.summary()
+keras.utils.plot_model(model,show_shapes= True)
 
 acc = history.history['accuracy']
 val_acc = history.history['val_accuracy']
